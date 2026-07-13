@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savoir-faire — Petit Trésor</title>
+<meta name="description" content="Le savoir-faire Petit Trésor — un bijou naît, dessiné, fondu et serti à la main dans notre atelier.">
+
+<!-- ==========================================================================
+     PETIT TRÉSOR — page SAVOIR-FAIRE
+     Licence MIT — voir bloc LICENSE en bas de fichier.
+     ========================================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --noir:        #0B0A10;
+  --surface:     #16121C;
+  --surface-2:   #1E1826;
+  --ligne:       rgba(248, 200, 220, 0.14);
+  --neon:        #FF2E8B;
+  --neon-clair:  #FF7CB8;
+  --neon-glow:   #FF2E8B;
+  --rose-poudre: #F8C8DC;
+  --or:          #E8C87E;
+  --or-doux:     rgba(232, 200, 126, 0.55);
+  --blanc-casse: #F5F0EA;
+  --texte-doux:  rgba(245, 240, 234, 0.62);
+  --texte-faible:rgba(245, 240, 234, 0.38);
+  --display: 'Cormorant Garamond', Georgia, serif;
+  --corps:   'Jost', 'Helvetica Neue', Arial, sans-serif;
+  --marge: clamp(20px, 5vw, 72px);
+  --rayon: 2px;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{ background:var(--noir); color:var(--blanc-casse); font-family:var(--corps); font-weight:300; line-height:1.6; overflow-x:hidden; position:relative; }
+::selection{ background:var(--neon); color:var(--noir); }
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; background:none; border:none; color:inherit; cursor:pointer; }
+img{ display:block; max-width:100%; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{ outline:1.5px solid var(--neon-clair); outline-offset:3px; }
+@media (prefers-reduced-motion: reduce){ *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; } }
+
+.fond-texture{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 8%, rgba(255,46,139,0.10), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 88% 18%, rgba(232,200,126,0.06), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 50% 95%, rgba(255,46,139,0.07), transparent 65%),
+    var(--noir);
+}
+.fond-fleurs{ position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.5; }
+.fond-fleurs svg{ position:absolute; }
+.grain{
+  position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+header{
+  position:fixed; top:0; left:0; right:0; z-index:50; display:flex; align-items:center; justify-content:space-between;
+  padding:22px var(--marge); background:linear-gradient(to bottom, rgba(11,10,16,0.92), rgba(11,10,16,0)); backdrop-filter:blur(6px);
+}
+.marque{ font-family:var(--display); font-size:1.5rem; font-weight:500; letter-spacing:0.04em; color:var(--blanc-casse); }
+nav{ display:flex; align-items:center; gap:clamp(20px, 3vw, 46px); }
+.nav-liens{ display:flex; gap:clamp(18px, 2.5vw, 38px); }
+.nav-liens a{ font-size:0.76rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--texte-doux); transition:color 0.35s ease; position:relative; padding-bottom:4px; }
+.nav-liens a::after{ content:""; position:absolute; left:0; bottom:0; width:0%; height:1px; background:var(--neon); transition:width 0.35s ease; }
+.nav-liens a:hover{ color:var(--blanc-casse); }
+.nav-liens a:hover::after{ width:100%; }
+.nav-liens a.actif{ color:var(--neon-clair); }
+.nav-liens a.actif::after{ width:100%; background:var(--neon-clair); }
+.btn-panier{
+  display:flex; align-items:center; gap:9px; font-size:0.76rem; letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--blanc-casse); border:1px solid var(--ligne); padding:9px 16px; border-radius:var(--rayon); transition:border-color 0.3s ease, background 0.3s ease;
+}
+.btn-panier:hover{ border-color:var(--or-doux); background:rgba(232,200,126,0.05); }
+.btn-panier svg{ width:15px; height:15px; stroke:var(--rose-poudre); }
+#compteur-panier{ min-width:17px; height:17px; border-radius:50%; background:var(--neon); color:var(--noir); font-size:0.65rem; font-weight:600; display:flex; align-items:center; justify-content:center; padding:0 4px; }
+.nav-burger{ display:none; width:36px; height:36px; border:1px solid var(--ligne); border-radius:50%; align-items:center; justify-content:center; flex-shrink:0; }
+.nav-burger svg{ width:15px; height:15px; stroke:var(--blanc-casse); }
+.nav-mobile{
+  display:none; position:fixed; top:0; right:0; bottom:0; width:min(300px, 82vw); background:var(--surface); border-left:1px solid var(--ligne);
+  z-index:96; transform:translateX(100%); transition:transform 0.45s cubic-bezier(0.16,1,0.3,1); flex-direction:column; padding:100px 34px 34px; gap:26px;
+}
+.nav-mobile.ouvert{ transform:translateX(0); }
+.nav-mobile a{ font-family:var(--display); font-size:1.5rem; font-style:italic; color:var(--blanc-casse); }
+.nav-mobile a.actif{ color:var(--neon-clair); }
+
+section{ position:relative; z-index:2; }
+.entete-section{ text-align:center; max-width:560px; margin:0 auto 64px; padding:0 var(--marge); }
+.entete-eyebrow{ font-size:0.7rem; letter-spacing:0.28em; text-transform:uppercase; color:var(--or); margin-bottom:14px; display:block; }
+.entete-titre{ font-family:var(--display); font-style:italic; font-weight:400; font-size:clamp(2.2rem, 4.2vw, 3.2rem); color:var(--blanc-casse); margin-bottom:16px; }
+.entete-texte{ color:var(--texte-doux); font-size:0.95rem; }
+
+/* ==========================================================================
+   HÉRO ATELIER
+   ========================================================================== */
+.hero-atelier{
+  padding:160px var(--marge) 90px; text-align:center; max-width:760px; margin:0 auto;
+}
+.hero-atelier .entete-eyebrow{ margin-bottom:20px; }
+.hero-atelier h1{
+  font-family:var(--display); font-style:italic; font-weight:400; font-size:clamp(2.6rem, 6vw, 4.2rem); margin-bottom:22px;
+}
+.hero-atelier h1 .neon{ color:var(--neon-clair); text-shadow:0 0 10px rgba(255,46,139,0.5), 0 0 30px rgba(255,46,139,0.25); }
+.hero-atelier p{ color:var(--texte-doux); font-size:1rem; max-width:560px; margin:0 auto; }
+
+/* ==========================================================================
+   ÉTAPES DU PROCESSUS
+   ========================================================================== */
+.processus{ padding:60px var(--marge) 130px; max-width:1100px; margin:0 auto; }
+.etape{
+  display:grid; grid-template-columns:120px 1fr; gap:34px; padding:44px 0; border-bottom:1px solid var(--ligne);
+  align-items:start;
+}
+.etape:first-child{ padding-top:0; }
+.etape:last-child{ border-bottom:none; }
+.etape-numero{
+  font-family:var(--display); font-style:italic; font-size:3.4rem; color:transparent;
+  -webkit-text-stroke:1px var(--or-doux); line-height:1;
+}
+.etape-corps h3{ font-family:var(--display); font-size:1.7rem; font-weight:500; margin-bottom:12px; }
+.etape-corps p{ color:var(--texte-doux); font-size:0.94rem; max-width:600px; }
+
+/* ==========================================================================
+   MATIÈRES
+   ========================================================================== */
+.matieres{ padding:0 var(--marge) 130px; }
+.grille-matieres{
+  max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:1px; background:var(--ligne); border:1px solid var(--ligne);
+}
+.matiere-carte{ background:var(--noir); padding:38px 30px; }
+.matiere-carte svg{ width:26px; height:26px; stroke:var(--or); margin-bottom:20px; }
+.matiere-carte h4{ font-family:var(--display); font-size:1.3rem; font-weight:500; margin-bottom:10px; }
+.matiere-carte p{ font-size:0.86rem; color:var(--texte-doux); }
+
+/* ==========================================================================
+   VISUEL ATELIER
+   ========================================================================== */
+.visuel-atelier{ padding:0 var(--marge) 130px; }
+.cadre-visuel{
+  max-width:1100px; margin:0 auto; position:relative; aspect-ratio:21/9;
+  background:linear-gradient(155deg, var(--surface), var(--surface-2)); border:1px solid var(--ligne); overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.cadre-interieur{ position:absolute; inset:16px; border:1px solid var(--or-doux); pointer-events:none; }
+.cadre-visuel .rempla{ display:flex; flex-direction:column; align-items:center; gap:14px; color:var(--texte-faible); text-align:center; padding:30px; }
+.cadre-visuel .rempla svg{ width:38px; height:38px; stroke:var(--or); opacity:0.6; }
+.cadre-visuel .rempla span{ font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; }
+
+/* ==========================================================================
+   ENGAGEMENT
+   ========================================================================== */
+.engagement{ padding:0 var(--marge) 130px; max-width:760px; margin:0 auto; text-align:center; }
+.engagement .entete-titre{ margin-bottom:22px; }
+.engagement p{ color:var(--texte-doux); font-size:0.98rem; margin-bottom:16px; }
+
+footer{ position:relative; z-index:2; padding:70px var(--marge) 30px; border-top:1px solid var(--ligne); }
+.pied-grille{ max-width:1320px; margin:0 auto; display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:50px; }
+.pied-marque{ font-family:var(--display); font-style:italic; font-size:1.5rem; margin-bottom:14px; }
+.pied-baseline{ font-size:0.84rem; color:var(--texte-doux); max-width:260px; }
+.pied-colonne h4{ font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--texte-faible); margin-bottom:18px; }
+.pied-colonne ul{ list-style:none; display:flex; flex-direction:column; gap:11px; }
+.pied-colonne a{ font-size:0.86rem; color:var(--texte-doux); transition:color 0.3s ease; }
+.pied-colonne a:hover{ color:var(--neon-clair); }
+.pied-colonne a.actif{ color:var(--neon-clair); }
+.pied-bas{
+  max-width:1320px; margin:0 auto; padding-top:26px; border-top:1px solid var(--ligne); display:flex; flex-wrap:wrap; gap:16px;
+  align-items:center; justify-content:space-between; font-size:0.74rem; color:var(--texte-faible);
+}
+.pied-licence{ display:flex; gap:18px; flex-wrap:wrap; }
+.pied-licence a{ display:flex; align-items:center; gap:6px; transition:color 0.3s ease; }
+.pied-licence a:hover{ color:var(--rose-poudre); }
+.pied-licence svg{ width:14px; height:14px; }
+
+.voile{ position:fixed; inset:0; background:rgba(11,10,16,0.7); backdrop-filter:blur(3px); z-index:90; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+.voile.ouvert{ opacity:1; pointer-events:auto; }
+.tiroir-panier{
+  position:fixed; top:0; right:0; bottom:0; width:min(420px, 92vw); background:var(--surface); border-left:1px solid var(--ligne);
+  z-index:95; display:flex; flex-direction:column; transform:translateX(100%); transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.tiroir-panier.ouvert{ transform:translateX(0); }
+.tiroir-entete{ display:flex; align-items:center; justify-content:space-between; padding:26px var(--marge); border-bottom:1px solid var(--ligne); }
+.tiroir-entete h3{ font-family:var(--display); font-style:italic; font-size:1.5rem; font-weight:500; }
+.tiroir-fermer{ width:34px; height:34px; border:1px solid var(--ligne); border-radius:50%; display:flex; align-items:center; justify-content:center; transition:border-color 0.3s ease, transform 0.3s ease; }
+.tiroir-fermer svg{ width:13px; height:13px; stroke:var(--blanc-casse); }
+.tiroir-fermer:hover{ border-color:var(--neon); transform:rotate(90deg); }
+.tiroir-corps{ flex:1; overflow-y:auto; padding:10px var(--marge); }
+.tiroir-corps::-webkit-scrollbar{ width:4px; }
+.tiroir-corps::-webkit-scrollbar-thumb{ background:var(--ligne); }
+.panier-vide{ height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center; color:var(--texte-faible); padding:40px 20px; }
+.panier-vide svg{ width:44px; height:44px; stroke:var(--rose-poudre); opacity:0.5; }
+.panier-vide span{ font-size:0.9rem; }
+.panier-vide small{ font-size:0.76rem; color:var(--texte-faible); }
+.ligne-article{ display:flex; gap:16px; padding:20px 0; border-bottom:1px solid var(--ligne); }
+.ligne-vignette{ width:76px; height:92px; flex-shrink:0; background:linear-gradient(155deg, var(--surface-2), var(--noir)); border:1px solid var(--ligne); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.ligne-vignette img{ width:100%; height:100%; object-fit:cover; }
+.ligne-vignette svg{ width:20px; height:20px; stroke:var(--rose-poudre); opacity:0.4; }
+.ligne-infos{ flex:1; display:flex; flex-direction:column; }
+.ligne-nom{ font-family:var(--display); font-size:1.05rem; margin-bottom:2px; }
+.ligne-matiere{ font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--texte-faible); margin-bottom:10px; }
+.ligne-bas{ display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+.quantite{ display:flex; align-items:center; gap:12px; border:1px solid var(--ligne); border-radius:var(--rayon); }
+.quantite button{ width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:var(--texte-doux); transition:color 0.3s ease; }
+.quantite button:hover{ color:var(--neon-clair); }
+.quantite span{ font-size:0.82rem; min-width:14px; text-align:center; }
+.ligne-prix{ font-size:0.88rem; color:var(--neon-clair); }
+.ligne-suppr{ font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--texte-faible); transition:color 0.3s ease; margin-left:14px; }
+.ligne-suppr:hover{ color:var(--neon); }
+.tiroir-pied{ padding:24px var(--marge) 30px; border-top:1px solid var(--ligne); }
+.recap-ligne{ display:flex; justify-content:space-between; font-size:0.86rem; color:var(--texte-doux); margin-bottom:10px; }
+.recap-total{ display:flex; justify-content:space-between; font-family:var(--display); font-size:1.3rem; margin:16px 0 22px; padding-top:16px; border-top:1px solid var(--ligne); }
+.recap-total .neon{ color:var(--neon-clair); }
+.btn-commander{
+  width:100%; padding:17px; background:var(--neon); color:var(--noir); font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase;
+  font-weight:500; border-radius:var(--rayon); box-shadow:0 0 22px rgba(255,46,139,0.3); transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-commander:hover{ transform:translateY(-2px); box-shadow:0 4px 28px rgba(255,46,139,0.5); }
+.tiroir-livraison{ text-align:center; font-size:0.72rem; color:var(--texte-faible); margin-top:14px; }
+
+@media (max-width: 860px){
+  .nav-liens{ display:none; }
+  .nav-burger{ display:flex; }
+  .nav-mobile{ display:flex; }
+  .pied-grille{ grid-template-columns:1fr 1fr; }
+  .etape{ grid-template-columns:1fr; gap:14px; }
+  .etape-numero{ font-size:2.4rem; }
+}
+@media (max-width: 560px){
+  .pied-grille{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="fond-texture"></div>
+<div class="grain"></div>
+<div class="fond-fleurs" aria-hidden="true">
+  <svg width="320" height="320" viewBox="0 0 320 320" style="top:-60px; left:40%;" fill="none">
+    <g stroke="#F8C8DC" stroke-width="0.6" opacity="0.35">
+      <path d="M160 60 C 130 90, 130 130, 160 170 C 190 130, 190 90, 160 60 Z"/>
+      <path d="M160 60 C 190 90, 190 130, 160 170 C 130 130, 130 90, 160 60 Z" transform="rotate(72 160 115)"/>
+      <path d="M160 60 C 190 90, 190 130, 160 170 C 130 130, 130 90, 160 60 Z" transform="rotate(144 160 115)"/>
+      <path d="M160 60 C 190 90, 190 130, 160 170 C 130 130, 130 90, 160 60 Z" transform="rotate(216 160 115)"/>
+      <path d="M160 60 C 190 90, 190 130, 160 170 C 130 130, 130 90, 160 60 Z" transform="rotate(288 160 115)"/>
+      <circle cx="160" cy="115" r="7" stroke="#E8C87E"/>
+    </g>
+  </svg>
+  <svg width="280" height="280" viewBox="0 0 280 280" style="bottom:10%; right:-70px;" fill="none">
+    <g stroke="#E8C87E" stroke-width="0.55" opacity="0.35">
+      <ellipse cx="140" cy="80" rx="24" ry="42" transform="rotate(0 140 118)"/>
+      <ellipse cx="140" cy="80" rx="24" ry="42" transform="rotate(72 140 118)"/>
+      <ellipse cx="140" cy="80" rx="24" ry="42" transform="rotate(144 140 118)"/>
+      <ellipse cx="140" cy="80" rx="24" ry="42" transform="rotate(216 140 118)"/>
+      <ellipse cx="140" cy="80" rx="24" ry="42" transform="rotate(288 140 118)"/>
+    </g>
+  </svg>
+</div>
+
+<header>
+  <a href="index.html" class="marque">Petit Trésor</a>
+  <nav>
+    <div class="nav-liens">
+      <a href="collections.html">Collections</a>
+      <a href="savoir-faire.html" class="actif">Savoir-faire</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <button class="btn-panier" id="ouvrir-panier" aria-label="Ouvrir le panier">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Panier</span>
+      <span id="compteur-panier">0</span>
+    </button>
+    <button class="nav-burger" id="ouvrir-nav-mobile" aria-label="Ouvrir le menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </nav>
+</header>
+
+<div class="nav-mobile" id="nav-mobile">
+  <a href="index.html">Accueil</a>
+  <a href="collections.html">Collections</a>
+  <a href="savoir-faire.html" class="actif">Savoir-faire</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<main>
+<section class="hero-atelier">
+  <span class="entete-eyebrow">L'atelier</span>
+  <h1>Un geste, une pierre, <span class="neon">un trésor</span></h1>
+  <p>Chaque pièce Petit Trésor naît dans notre atelier, où elle est dessinée, fondue puis sertie à la main. Nous travaillons en petites séries pour garder le contrôle de chaque détail — du croquis jusqu'à l'écrin.</p>
+</section>
+
+<section class="processus">
+  <div class="etape">
+    <div class="etape-numero">01</div>
+    <div class="etape-corps">
+      <h3>Dessin et choix des matières</h3>
+      <p>Chaque bijou commence par un croquis. L'or provient exclusivement de filières recyclées, et les pierres sont sélectionnées une à une auprès de fournisseurs traçables, pour leur couleur, leur pureté et leur histoire.</p>
+    </div>
+  </div>
+  <div class="etape">
+    <div class="etape-numero">02</div>
+    <div class="etape-corps">
+      <h3>Fonte et façonnage</h3>
+      <p>L'or est fondu puis coulé dans un moule taillé pour la pièce. Chaque forme est ensuite reprise à la main, limée et ajustée jusqu'à obtenir la structure exacte du dessin d'origine.</p>
+    </div>
+  </div>
+  <div class="etape">
+    <div class="etape-numero">03</div>
+    <div class="etape-corps">
+      <h3>Sertissage</h3>
+      <p>Les pierres sont serties une à une, à la loupe, par nos artisans sertisseurs. Cette étape, la plus minutieuse, peut demander plusieurs heures selon la complexité de la pièce.</p>
+    </div>
+  </div>
+  <div class="etape">
+    <div class="etape-numero">04</div>
+    <div class="etape-corps">
+      <h3>Polissage et contrôle</h3>
+      <p>Chaque bijou est poli à la main pour révéler son éclat final, puis passe un contrôle qualité complet — solidité des attaches, tenue des pierres, finitions — avant sa mise en écrin.</p>
+    </div>
+  </div>
+</section>
+
+<section class="matieres">
+  <div class="entete-section">
+    <span class="entete-eyebrow">Nos matières</span>
+    <h2 class="entete-titre">Ce que nous choisissons, et pourquoi</h2>
+  </div>
+  <div class="grille-matieres">
+    <div class="matiere-carte">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7Z"/><path d="M3 7l9 5 9-5"/><path d="M12 12v10"/></svg>
+      <h4>Or recyclé 18 carats</h4>
+      <p>Issu de filières de recyclage certifiées, sans nouvelle extraction minière. Sa teinte et sa tenue sont identiques à celles d'un or minier classique.</p>
+    </div>
+    <div class="matiere-carte">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 8l8 14 8-14Z"/><path d="M4 8h16M12 2v20"/></svg>
+      <h4>Pierres tracées</h4>
+      <p>Diamants, saphirs et grenats sont achetés auprès de fournisseurs capables de documenter leur origine, étape par étape.</p>
+    </div>
+    <div class="matiere-carte">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      <h4>Petites séries</h4>
+      <p>Nous ne produisons jamais en masse. Chaque modèle est fabriqué en quantité limitée, ce qui nous laisse le temps de soigner chaque exemplaire.</p>
+    </div>
+  </div>
+</section>
+
+<section class="visuel-atelier">
+  <div class="cadre-visuel">
+    <div class="cadre-interieur"></div>
+    <div class="rempla">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>
+      <span>Photo d'atelier à venir</span>
+    </div>
+  </div>
+</section>
+
+<section class="engagement">
+  <span class="entete-eyebrow">Notre engagement</span>
+  <h2 class="entete-titre">Fabriquer moins, mais fabriquer bien</h2>
+  <p>Nous croyons qu'un bijou devrait durer plus longtemps que la tendance qui l'a inspiré. C'est pourquoi chaque pièce Petit Trésor est pensée pour être portée, réparée et transmise — pas remplacée.</p>
+  <p>Notre atelier reste volontairement petit. C'est ce qui nous permet de répondre de chaque geste, du premier croquis jusqu'à l'écrin que vous recevez.</p>
+</section>
+</main>
+
+<footer>
+  <div class="pied-grille">
+    <div>
+      <div class="pied-marque">Petit Trésor</div>
+      <p class="pied-baseline">Joaillerie fine façonnée à la main, entre tradition et lumière.</p>
+    </div>
+    <div class="pied-colonne">
+      <h4>Boutique</h4>
+      <ul>
+        <li><a href="collections.html">Collections</a></li>
+        <li><a href="savoir-faire.html" class="actif">Savoir-faire</a></li>
+        <li><a href="contact.html">Cartes cadeaux</a></li>
+      </ul>
+    </div>
+    <div class="pied-colonne">
+      <h4>Aide</h4>
+      <ul>
+        <li><a href="contact.html">Livraison</a></li>
+        <li><a href="contact.html">Retours</a></li>
+        <li><a href="contact.html">Guide des tailles</a></li>
+      </ul>
+    </div>
+    <div class="pied-colonne">
+      <h4>Suivez-nous</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Pinterest</a></li>
+        <li><a href="#">TikTok</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pied-bas">
+    <span>© 2026 Petit Trésor. Tous droits réservés.</span>
+    <div class="pied-licence">
+      <a href="https://github.com" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.1c-3.2.7-3.87-1.36-3.87-1.36-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.29 1.19-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.05.78 2.12v3.14c0 .3.21.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+        Code source (GitHub)
+      </a>
+      <a href="#licence">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        Licence MIT — open source
+      </a>
+    </div>
+  </div>
+</footer>
+
+<div class="voile" id="voile"></div>
+<aside class="tiroir-panier" id="tiroir-panier" aria-label="Panier">
+  <div class="tiroir-entete">
+    <h3>Votre panier</h3>
+    <button class="tiroir-fermer" id="fermer-panier" aria-label="Fermer le panier">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="tiroir-corps" id="tiroir-corps"></div>
+  <div class="tiroir-pied" id="tiroir-pied"></div>
+</aside>
+
+<script>
+/* Panier en mémoire JS, propre à cette page — voir note complète dans index.html.
+   Cette page n'a pas de grille produits ; le tiroir reste néanmoins fonctionnel
+   pour la cohérence de navigation, mais démarre vide sur cette page. */
+
+const produits = [
+  { id: "pt-01", nom: "Collier Papillons",  matiere: "Doré · Émail",       prix: 420,  image: "photos/collier-papillons.jpg" },
+  { id: "pt-02", nom: "Bague Solitaire",     matiere: "Or rose · Diamant", prix: 1290, image: "photos/bague-solitaire.jpg" },
+  { id: "pt-03", nom: "Bague Couronne",      matiere: "Or 18k · Zircons",  prix: 780,  image: "photos/bague-sertie.jpg" },
+  { id: "pt-04", nom: "Broche Araignée",     matiere: "Argenté · Saphir",  prix: 560,  image: "photos/broche-araignee.jpg" },
+];
+
+let panier = {};
+const formateurPrix = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+function svgLigneVide(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7Z"/><path d="M3 7l9 5 9-5"/><path d="M12 12v10"/></svg>`;
+}
+function changerQuantite(id, delta){ if(!panier[id]) return; panier[id]+=delta; if(panier[id]<=0) delete panier[id]; rendrePanier(); }
+function retirerDuPanier(id){ delete panier[id]; rendrePanier(); }
+function totalArticles(){ return Object.values(panier).reduce((s,q)=> s+q, 0); }
+function totalPrix(){ return Object.entries(panier).reduce((s,[id,q])=>{ const p=produits.find(pr=>pr.id===id); return s+(p?p.prix*q:0); },0); }
+
+function rendrePanier(){
+  const corps = document.getElementById('tiroir-corps');
+  const pied  = document.getElementById('tiroir-pied');
+  document.getElementById('compteur-panier').textContent = totalArticles();
+  const ids = Object.keys(panier);
+  if(ids.length === 0){
+    corps.innerHTML = `
+      <div class="panier-vide">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Votre panier est vide</span>
+        <small>Retrouvez la collection complète sur la page Collections.</small>
+      </div>`;
+    pied.innerHTML = '';
+    return;
+  }
+  corps.innerHTML = ids.map(id=>{
+    const p = produits.find(pr=>pr.id===id); if(!p) return '';
+    return `
+      <div class="ligne-article" data-id="${id}">
+        <div class="ligne-vignette">${p.image ? `<img src="${p.image}" alt="${p.nom}">` : svgLigneVide()}</div>
+        <div class="ligne-infos">
+          <span class="ligne-nom">${p.nom}</span>
+          <span class="ligne-matiere">${p.matiere}</span>
+          <div class="ligne-bas">
+            <div class="quantite">
+              <button type="button" class="moins" data-id="${id}" aria-label="Diminuer la quantité">−</button>
+              <span>${panier[id]}</span>
+              <button type="button" class="plus" data-id="${id}" aria-label="Augmenter la quantité">+</button>
+            </div>
+            <div>
+              <span class="ligne-prix">${formateurPrix.format(p.prix*panier[id])}</span>
+              <button type="button" class="ligne-suppr" data-id="${id}">Retirer</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  pied.innerHTML = `
+    <div class="recap-ligne"><span>Sous-total</span><span>${formateurPrix.format(totalPrix())}</span></div>
+    <div class="recap-ligne"><span>Livraison</span><span>Offerte</span></div>
+    <div class="recap-total"><span>Total</span><span class="neon">${formateurPrix.format(totalPrix())}</span></div>
+    <button type="button" class="btn-commander">Passer la commande</button>
+    <p class="tiroir-livraison">Paiement sécurisé · Retours sous 30 jours</p>`;
+  corps.querySelectorAll('.moins').forEach(b=> b.addEventListener('click', ()=>changerQuantite(b.dataset.id,-1)));
+  corps.querySelectorAll('.plus').forEach(b=> b.addEventListener('click', ()=>changerQuantite(b.dataset.id,1)));
+  corps.querySelectorAll('.ligne-suppr').forEach(b=> b.addEventListener('click', ()=>retirerDuPanier(b.dataset.id)));
+}
+
+const voile = document.getElementById('voile');
+const tiroir = document.getElementById('tiroir-panier');
+function ouvrirPanier(){ voile.classList.add('ouvert'); tiroir.classList.add('ouvert'); document.body.style.overflow = 'hidden'; }
+function fermerPanier(){ voile.classList.remove('ouvert'); tiroir.classList.remove('ouvert'); document.body.style.overflow = ''; }
+document.getElementById('ouvrir-panier').addEventListener('click', ouvrirPanier);
+document.getElementById('fermer-panier').addEventListener('click', fermerPanier);
+voile.addEventListener('click', fermerPanier);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ fermerPanier(); fermerNavMobile(); } });
+
+const navMobile = document.getElementById('nav-mobile');
+const ouvrirNavBtn = document.getElementById('ouvrir-nav-mobile');
+function fermerNavMobile(){ navMobile.classList.remove('ouvert'); }
+if(ouvrirNavBtn){ ouvrirNavBtn.addEventListener('click', ()=> navMobile.classList.toggle('ouvert')); }
+
+rendrePanier();
+</script>
+
+<!-- ============================================================================
+LICENSE — MIT License
+id="licence"
+Copyright (c) 2026 Petit Trésor
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+Polices utilisées : Cormorant Garamond & Jost, distribuées via Google Fonts
+sous licence SIL Open Font License (OFL) — libres d'usage commercial.
+============================================================================ -->
+
+</body>
+</html>

@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petit Trésor — Joaillerie</title>
+<meta name="description" content="Petit Trésor — bijoux fins et pièces uniques, façonnés avec soin.">
+
+<!-- ==========================================================================
+     PETIT TRÉSOR — Boutique de bijouterie
+     Licence : MIT — libre de réutilisation, modification, distribution.
+     Voir le bloc <!-- LICENSE --> tout en bas du fichier pour le texte complet.
+     Aucune dépendance externe hors polices Google Fonts (open source, OFL).
+     ========================================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ==========================================================================
+   TOKENS
+   ========================================================================== */
+:root{
+  --noir:        #0B0A10;
+  --surface:     #16121C;
+  --surface-2:   #1E1826;
+  --ligne:       rgba(248, 200, 220, 0.14);
+  --neon:        #FF2E8B;
+  --neon-clair:  #FF7CB8;
+  --neon-glow:   #FF2E8B;
+  --rose-poudre: #F8C8DC;
+  --or:          #E8C87E;
+  --or-doux:     rgba(232, 200, 126, 0.55);
+  --blanc-casse: #F5F0EA;
+  --texte-doux:  rgba(245, 240, 234, 0.62);
+  --texte-faible:rgba(245, 240, 234, 0.38);
+
+  --display: 'Cormorant Garamond', Georgia, serif;
+  --corps:   'Jost', 'Helvetica Neue', Arial, sans-serif;
+
+  --marge: clamp(20px, 5vw, 72px);
+  --rayon: 2px;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  background:var(--noir);
+  color:var(--blanc-casse);
+  font-family:var(--corps);
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+  position:relative;
+}
+
+::selection{ background:var(--neon); color:var(--noir); }
+
+a{ color:inherit; text-decoration:none; }
+
+button{
+  font-family:inherit;
+  background:none;
+  border:none;
+  color:inherit;
+  cursor:pointer;
+}
+
+img{ display:block; max-width:100%; }
+
+/* Accessibilité clavier */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible{
+  outline:1.5px solid var(--neon-clair);
+  outline-offset:3px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+}
+
+/* ==========================================================================
+   FOND — texture + fleurs en filigrane (SVG trait fin, aucun emoji)
+   ========================================================================== */
+.fond-texture{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 8%, rgba(255,46,139,0.10), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 88% 18%, rgba(232,200,126,0.06), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 50% 95%, rgba(255,46,139,0.07), transparent 65%),
+    var(--noir);
+}
+
+.fond-fleurs{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+.fond-fleurs svg{ position:absolute; }
+
+.grain{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity:0.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   EN-TÊTE
+   ========================================================================== */
+header{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:22px var(--marge);
+  background:linear-gradient(to bottom, rgba(11,10,16,0.92), rgba(11,10,16,0));
+  backdrop-filter:blur(6px);
+}
+
+.marque{
+  font-family:var(--display);
+  font-size:1.5rem;
+  font-weight:500;
+  letter-spacing:0.04em;
+  color:var(--blanc-casse);
+}
+
+nav{ display:flex; align-items:center; gap:clamp(20px, 3vw, 46px); }
+
+.nav-liens{ display:flex; gap:clamp(18px, 2.5vw, 38px); }
+
+.nav-liens a{
+  font-size:0.76rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--texte-doux);
+  transition:color 0.35s ease;
+  position:relative;
+  padding-bottom:4px;
+}
+.nav-liens a::after{
+  content:"";
+  position:absolute;
+  left:0; bottom:0;
+  width:0%; height:1px;
+  background:var(--neon);
+  transition:width 0.35s ease;
+}
+.nav-liens a:hover{ color:var(--blanc-casse); }
+.nav-liens a:hover::after{ width:100%; }
+
+.btn-panier{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:0.76rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--blanc-casse);
+  border:1px solid var(--ligne);
+  padding:9px 16px;
+  border-radius:var(--rayon);
+  transition:border-color 0.3s ease, background 0.3s ease;
+}
+.btn-panier:hover{ border-color:var(--or-doux); background:rgba(232,200,126,0.05); }
+.btn-panier svg{ width:15px; height:15px; stroke:var(--rose-poudre); }
+#compteur-panier{
+  min-width:17px; height:17px;
+  border-radius:50%;
+  background:var(--neon);
+  color:var(--noir);
+  font-size:0.65rem;
+  font-weight:600;
+  display:flex; align-items:center; justify-content:center;
+  padding:0 4px;
+}
+
+/* ==========================================================================
+   HÉRO — l'enseigne néon
+   ========================================================================== */
+.hero{
+  position:relative;
+  z-index:2;
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:120px var(--marge) 80px;
+  overflow:hidden;
+}
+
+.hero-eyebrow{
+  font-size:0.72rem;
+  letter-spacing:0.32em;
+  text-transform:uppercase;
+  color:var(--texte-faible);
+  margin-bottom:28px;
+  opacity:0;
+  animation:leverVoile 1s ease 0.2s forwards;
+}
+
+.enseigne{
+  position:relative;
+  font-family:var(--display);
+  font-style:italic;
+  font-weight:500;
+  font-size:clamp(3.6rem, 12vw, 9rem);
+  line-height:1;
+  letter-spacing:0.01em;
+  color:var(--blanc-casse);
+  margin:0 0 8px;
+}
+
+.enseigne .neon{
+  color:var(--neon-clair);
+  text-shadow:
+    0 0 6px var(--neon-glow),
+    0 0 16px var(--neon-glow),
+    0 0 34px rgba(255,46,139,0.55),
+    0 0 70px rgba(255,46,139,0.35);
+  animation:respirationNeon 4.5s ease-in-out infinite, allumage 2.2s ease-out forwards;
+}
+
+@keyframes allumage{
+  0%{ opacity:0; text-shadow:none; }
+  4%{ opacity:1; text-shadow:0 0 6px var(--neon-glow); }
+  6%{ opacity:0.25; text-shadow:none; }
+  8%{ opacity:1; text-shadow:0 0 6px var(--neon-glow), 0 0 16px var(--neon-glow); }
+  20%{ opacity:0.4; text-shadow:none; }
+  24%{ opacity:1; text-shadow:0 0 6px var(--neon-glow), 0 0 16px var(--neon-glow), 0 0 34px rgba(255,46,139,0.55); }
+  100%{ opacity:1; text-shadow:0 0 6px var(--neon-glow), 0 0 16px var(--neon-glow), 0 0 34px rgba(255,46,139,0.55), 0 0 70px rgba(255,46,139,0.35); }
+}
+@keyframes respirationNeon{
+  0%, 100%{ filter:brightness(1); }
+  50%{ filter:brightness(1.14); }
+}
+
+.hero-sous-titre{
+  max-width:480px;
+  font-size:1.02rem;
+  font-weight:300;
+  color:var(--texte-doux);
+  margin:24px auto 40px;
+  opacity:0;
+  animation:leverVoile 1s ease 0.6s forwards;
+}
+
+.hero-boutons{
+  display:flex;
+  gap:18px;
+  opacity:0;
+  animation:leverVoile 1s ease 0.85s forwards;
+}
+
+.btn-primaire, .btn-secondaire{
+  padding:15px 34px;
+  font-size:0.76rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  border-radius:var(--rayon);
+  transition:transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease, border-color 0.35s ease;
+}
+.btn-primaire{
+  background:var(--neon);
+  color:var(--noir);
+  font-weight:500;
+  box-shadow:0 0 22px rgba(255,46,139,0.3);
+}
+.btn-primaire:hover{ transform:translateY(-2px); box-shadow:0 4px 30px rgba(255,46,139,0.5); }
+.btn-secondaire{
+  border:1px solid var(--ligne);
+  color:var(--blanc-casse);
+}
+.btn-secondaire:hover{ border-color:var(--or-doux); transform:translateY(-2px); }
+
+@keyframes leverVoile{
+  from{ opacity:0; transform:translateY(14px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+.hero-scroll{
+  position:absolute;
+  bottom:34px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  opacity:0.5;
+}
+.hero-scroll span{ font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--texte-faible); }
+.hero-scroll .trait{
+  width:1px; height:36px;
+  background:linear-gradient(to bottom, var(--rose-poudre), transparent);
+  animation:glisser 2s ease-in-out infinite;
+}
+@keyframes glisser{ 0%,100%{ opacity:0.2; } 50%{ opacity:0.8; } }
+
+/* ==========================================================================
+   BANDEAU VALEURS
+   ========================================================================== */
+.bandeau{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:clamp(30px, 6vw, 90px);
+  padding:34px var(--marge);
+  border-top:1px solid var(--ligne);
+  border-bottom:1px solid var(--ligne);
+}
+.bandeau-item{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-size:0.72rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--texte-doux);
+}
+.bandeau-item svg{ width:16px; height:16px; stroke:var(--or); flex-shrink:0; }
+
+/* ==========================================================================
+   SECTIONS — structure générale
+   ========================================================================== */
+section{ position:relative; z-index:2; }
+
+.entete-section{
+  text-align:center;
+  max-width:560px;
+  margin:0 auto 64px;
+  padding:0 var(--marge);
+}
+.entete-eyebrow{
+  font-size:0.7rem;
+  letter-spacing:0.28em;
+  text-transform:uppercase;
+  color:var(--or);
+  margin-bottom:14px;
+  display:block;
+}
+.entete-titre{
+  font-family:var(--display);
+  font-style:italic;
+  font-weight:400;
+  font-size:clamp(2.2rem, 4.2vw, 3.2rem);
+  color:var(--blanc-casse);
+  margin-bottom:16px;
+}
+.entete-texte{
+  color:var(--texte-doux);
+  font-size:0.95rem;
+}
+
+/* ==========================================================================
+   COLLECTIONS — boutique
+   ========================================================================== */
+.boutique{ padding:130px var(--marge) 100px; }
+
+.grille-produits{
+  max-width:1320px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
+  gap:2px;
+  background:var(--ligne);
+  border:1px solid var(--ligne);
+}
+
+.carte-produit{
+  background:var(--noir);
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+
+.produit-vitrine{
+  position:relative;
+  aspect-ratio:4/5;
+  overflow:hidden;
+  background:
+    linear-gradient(155deg, var(--surface) 0%, var(--surface-2) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.produit-vitrine img{
+  width:100%; height:100%;
+  object-fit:cover;
+  transition:transform 0.85s cubic-bezier(0.16,1,0.3,1), filter 0.6s ease;
+}
+.carte-produit:hover .produit-vitrine img{ transform:scale(1.06); }
+
+/* Placeholder tant que le client n'a pas fourni ses photos */
+.produit-vitrine .rempla{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px;
+  color:var(--texte-faible);
+}
+.produit-vitrine .rempla svg{ width:34px; height:34px; stroke:var(--rose-poudre); opacity:0.55; }
+.produit-vitrine .rempla span{ font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; }
+
+.produit-vitrine::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(11,10,16,0.55), transparent 45%);
+  opacity:0;
+  transition:opacity 0.5s ease;
+}
+.carte-produit:hover .produit-vitrine::after{ opacity:1; }
+
+.produit-halo{
+  position:absolute; inset:0;
+  opacity:0;
+  transition:opacity 0.5s ease;
+  box-shadow:inset 0 0 60px rgba(255,46,139,0.18);
+  pointer-events:none;
+}
+.carte-produit:hover .produit-halo{ opacity:1; }
+
+.produit-ajout-rapide{
+  position:absolute;
+  bottom:14px; left:14px; right:14px;
+  transform:translateY(14px);
+  opacity:0;
+  transition:transform 0.4s ease, opacity 0.4s ease;
+}
+.carte-produit:hover .produit-ajout-rapide{ transform:translateY(0); opacity:1; }
+
+.produit-ajout-rapide button{
+  width:100%;
+  padding:12px;
+  background:rgba(11,10,16,0.82);
+  backdrop-filter:blur(6px);
+  border:1px solid var(--neon);
+  color:var(--blanc-casse);
+  font-size:0.68rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  border-radius:var(--rayon);
+  transition:background 0.3s ease;
+}
+.produit-ajout-rapide button:hover{ background:var(--neon); color:var(--noir); }
+
+.produit-etiquette{
+  position:absolute;
+  top:14px; left:14px;
+  font-size:0.62rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--noir);
+  background:var(--or);
+  padding:5px 10px;
+  border-radius:1px;
+}
+
+.produit-infos{
+  padding:22px 20px 24px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  flex:1;
+}
+.produit-matiere{
+  font-size:0.66rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--texte-faible);
+}
+.produit-nom{
+  font-family:var(--display);
+  font-size:1.28rem;
+  font-weight:500;
+  color:var(--blanc-casse);
+}
+.produit-bas{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:8px;
+}
+.produit-prix{
+  font-size:0.94rem;
+  color:var(--neon-clair);
+  font-weight:400;
+}
+.produit-plus{
+  width:32px; height:32px;
+  border:1px solid var(--ligne);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color 0.3s ease, transform 0.3s ease, background 0.3s ease;
+  flex-shrink:0;
+}
+.produit-plus svg{ width:13px; height:13px; stroke:var(--rose-poudre); }
+.produit-plus:hover{ border-color:var(--neon); background:rgba(255,46,139,0.08); transform:rotate(90deg); }
+
+/* ==========================================================================
+   SECTION SAVOIR-FAIRE
+   ========================================================================== */
+.savoir-faire{
+  padding:120px var(--marge);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(40px, 6vw, 100px);
+  max-width:1320px;
+  margin:0 auto;
+  align-items:center;
+}
+.sf-visuel{
+  position:relative;
+  aspect-ratio:3/4;
+  border:1px solid var(--ligne);
+  background:linear-gradient(155deg, var(--surface), var(--surface-2));
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.sf-visuel img{ width:100%; height:100%; object-fit:cover; }
+.sf-visuel .rempla{ display:flex; flex-direction:column; align-items:center; gap:12px; color:var(--texte-faible); padding:30px; text-align:center; }
+.sf-visuel .rempla svg{ width:40px; height:40px; stroke:var(--or); opacity:0.6; }
+.sf-visuel .rempla span{ font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; }
+
+.sf-cadre{
+  position:absolute;
+  inset:16px;
+  border:1px solid var(--or-doux);
+  pointer-events:none;
+}
+
+.sf-texte .entete-eyebrow{ text-align:left; }
+.sf-texte .entete-titre{ text-align:left; margin-bottom:22px; }
+.sf-texte p{
+  color:var(--texte-doux);
+  font-size:0.96rem;
+  margin-bottom:18px;
+  max-width:460px;
+}
+.sf-liste{
+  margin-top:30px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.sf-liste-item{
+  display:flex;
+  gap:16px;
+  align-items:flex-start;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--ligne);
+}
+.sf-liste-item strong{
+  font-family:var(--display);
+  font-style:italic;
+  font-size:1.5rem;
+  color:var(--neon-clair);
+  min-width:44px;
+}
+.sf-liste-item span{ font-size:0.88rem; color:var(--texte-doux); padding-top:4px; }
+
+/* ==========================================================================
+   NEWSLETTER
+   ========================================================================== */
+.newsletter{
+  position:relative;
+  padding:110px var(--marge);
+  text-align:center;
+  border-top:1px solid var(--ligne);
+  overflow:hidden;
+}
+.newsletter-titre{
+  font-family:var(--display);
+  font-style:italic;
+  font-size:clamp(2rem, 4vw, 2.9rem);
+  margin-bottom:16px;
+}
+.newsletter-titre .neon{
+  color:var(--neon-clair);
+  text-shadow:0 0 10px rgba(255,46,139,0.5), 0 0 30px rgba(255,46,139,0.25);
+}
+.newsletter-texte{ color:var(--texte-doux); max-width:440px; margin:0 auto 34px; font-size:0.94rem; }
+
+.form-newsletter{
+  display:flex;
+  max-width:420px;
+  margin:0 auto;
+  border:1px solid var(--ligne);
+  border-radius:var(--rayon);
+  overflow:hidden;
+}
+.form-newsletter input{
+  flex:1;
+  background:transparent;
+  border:none;
+  padding:16px 18px;
+  color:var(--blanc-casse);
+  font-family:inherit;
+  font-size:0.88rem;
+}
+.form-newsletter input::placeholder{ color:var(--texte-faible); }
+.form-newsletter button{
+  padding:16px 26px;
+  background:var(--neon);
+  color:var(--noir);
+  font-size:0.72rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  font-weight:500;
+  transition:background 0.3s ease;
+  white-space:nowrap;
+}
+.form-newsletter button:hover{ background:var(--neon-clair); }
+
+.newsletter-confirmation{
+  margin-top:16px;
+  font-size:0.8rem;
+  color:var(--or);
+  opacity:0;
+  height:0;
+  transition:opacity 0.4s ease;
+}
+.newsletter-confirmation.visible{ opacity:1; height:auto; }
+
+/* ==========================================================================
+   PIED DE PAGE
+   ========================================================================== */
+footer{
+  position:relative;
+  z-index:2;
+  padding:70px var(--marge) 30px;
+  border-top:1px solid var(--ligne);
+}
+.pied-grille{
+  max-width:1320px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1.4fr 1fr 1fr 1fr;
+  gap:40px;
+  padding-bottom:50px;
+}
+.pied-marque{ font-family:var(--display); font-style:italic; font-size:1.5rem; margin-bottom:14px; }
+.pied-baseline{ font-size:0.84rem; color:var(--texte-doux); max-width:260px; }
+.pied-colonne h4{
+  font-size:0.68rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--texte-faible);
+  margin-bottom:18px;
+}
+.pied-colonne ul{ list-style:none; display:flex; flex-direction:column; gap:11px; }
+.pied-colonne a{ font-size:0.86rem; color:var(--texte-doux); transition:color 0.3s ease; }
+.pied-colonne a:hover{ color:var(--neon-clair); }
+
+.pied-bas{
+  max-width:1320px;
+  margin:0 auto;
+  padding-top:26px;
+  border-top:1px solid var(--ligne);
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  align-items:center;
+  justify-content:space-between;
+  font-size:0.74rem;
+  color:var(--texte-faible);
+}
+.pied-licence{ display:flex; gap:18px; flex-wrap:wrap; }
+.pied-licence a{ display:flex; align-items:center; gap:6px; transition:color 0.3s ease; }
+.pied-licence a:hover{ color:var(--rose-poudre); }
+.pied-licence svg{ width:14px; height:14px; }
+
+/* ==========================================================================
+   TIROIR PANIER
+   ========================================================================== */
+.voile{
+  position:fixed; inset:0;
+  background:rgba(11,10,16,0.7);
+  backdrop-filter:blur(3px);
+  z-index:90;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.4s ease;
+}
+.voile.ouvert{ opacity:1; pointer-events:auto; }
+
+.tiroir-panier{
+  position:fixed;
+  top:0; right:0; bottom:0;
+  width:min(420px, 92vw);
+  background:var(--surface);
+  border-left:1px solid var(--ligne);
+  z-index:95;
+  display:flex;
+  flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.tiroir-panier.ouvert{ transform:translateX(0); }
+
+.tiroir-entete{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:26px var(--marge);
+  border-bottom:1px solid var(--ligne);
+}
+.tiroir-entete h3{
+  font-family:var(--display);
+  font-style:italic;
+  font-size:1.5rem;
+  font-weight:500;
+}
+.tiroir-fermer{
+  width:34px; height:34px;
+  border:1px solid var(--ligne);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color 0.3s ease, transform 0.3s ease;
+}
+.tiroir-fermer svg{ width:13px; height:13px; stroke:var(--blanc-casse); }
+.tiroir-fermer:hover{ border-color:var(--neon); transform:rotate(90deg); }
+
+.tiroir-corps{
+  flex:1;
+  overflow-y:auto;
+  padding:10px var(--marge);
+}
+.tiroir-corps::-webkit-scrollbar{ width:4px; }
+.tiroir-corps::-webkit-scrollbar-thumb{ background:var(--ligne); }
+
+.panier-vide{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  text-align:center;
+  color:var(--texte-faible);
+  padding:40px 20px;
+}
+.panier-vide svg{ width:44px; height:44px; stroke:var(--rose-poudre); opacity:0.5; }
+.panier-vide span{ font-size:0.9rem; }
+.panier-vide small{ font-size:0.76rem; color:var(--texte-faible); }
+
+.ligne-article{
+  display:flex;
+  gap:16px;
+  padding:20px 0;
+  border-bottom:1px solid var(--ligne);
+}
+.ligne-vignette{
+  width:76px; height:92px;
+  flex-shrink:0;
+  background:linear-gradient(155deg, var(--surface-2), var(--noir));
+  border:1px solid var(--ligne);
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.ligne-vignette img{ width:100%; height:100%; object-fit:cover; }
+.ligne-vignette svg{ width:20px; height:20px; stroke:var(--rose-poudre); opacity:0.4; }
+
+.ligne-infos{ flex:1; display:flex; flex-direction:column; }
+.ligne-nom{ font-family:var(--display); font-size:1.05rem; margin-bottom:2px; }
+.ligne-matiere{ font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--texte-faible); margin-bottom:10px; }
+.ligne-bas{ display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+
+.quantite{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border:1px solid var(--ligne);
+  border-radius:var(--rayon);
+}
+.quantite button{
+  width:26px; height:26px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.9rem;
+  color:var(--texte-doux);
+  transition:color 0.3s ease;
+}
+.quantite button:hover{ color:var(--neon-clair); }
+.quantite span{ font-size:0.82rem; min-width:14px; text-align:center; }
+
+.ligne-prix{ font-size:0.88rem; color:var(--neon-clair); }
+.ligne-suppr{
+  font-size:0.68rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--texte-faible);
+  transition:color 0.3s ease;
+  margin-left:14px;
+}
+.ligne-suppr:hover{ color:var(--neon); }
+
+.tiroir-pied{
+  padding:24px var(--marge) 30px;
+  border-top:1px solid var(--ligne);
+}
+.recap-ligne{
+  display:flex;
+  justify-content:space-between;
+  font-size:0.86rem;
+  color:var(--texte-doux);
+  margin-bottom:10px;
+}
+.recap-total{
+  display:flex;
+  justify-content:space-between;
+  font-family:var(--display);
+  font-size:1.3rem;
+  margin:16px 0 22px;
+  padding-top:16px;
+  border-top:1px solid var(--ligne);
+}
+.recap-total .neon{ color:var(--neon-clair); }
+
+.btn-commander{
+  width:100%;
+  padding:17px;
+  background:var(--neon);
+  color:var(--noir);
+  font-size:0.78rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  font-weight:500;
+  border-radius:var(--rayon);
+  box-shadow:0 0 22px rgba(255,46,139,0.3);
+  transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-commander:hover{ transform:translateY(-2px); box-shadow:0 4px 28px rgba(255,46,139,0.5); }
+.btn-commander:disabled{ opacity:0.35; cursor:not-allowed; transform:none; box-shadow:none; }
+
+.tiroir-livraison{
+  text-align:center;
+  font-size:0.72rem;
+  color:var(--texte-faible);
+  margin-top:14px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 860px){
+  .nav-liens{ display:none; }
+  .savoir-faire{ grid-template-columns:1fr; }
+  .sf-texte .entete-eyebrow, .sf-texte .entete-titre{ text-align:center; }
+  .sf-texte p{ margin-left:auto; margin-right:auto; }
+  .pied-grille{ grid-template-columns:1fr 1fr; }
+}
+@media (max-width: 560px){
+  .pied-grille{ grid-template-columns:1fr; }
+  .form-newsletter{ flex-direction:column; }
+  .bandeau{ gap:20px; }
+  .grille-produits{ grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<!-- Fond : texture + fleurs en filigrane -->
+<div class="fond-texture"></div>
+<div class="grain"></div>
+
+<div class="fond-fleurs" aria-hidden="true">
+  <!-- Fleur haut gauche -->
+  <svg width="360" height="360" viewBox="0 0 360 360" style="top:-60px; left:-70px;" fill="none">
+    <g stroke="#F8C8DC" stroke-width="0.7" opacity="0.5">
+      <path d="M180 60 C 150 90, 150 130, 180 170 C 210 130, 210 90, 180 60 Z"/>
+      <path d="M180 60 C 210 90, 210 130, 180 170 C 150 130, 150 90, 180 60 Z" transform="rotate(60 180 115)"/>
+      <path d="M180 60 C 210 90, 210 130, 180 170 C 150 130, 150 90, 180 60 Z" transform="rotate(120 180 115)"/>
+      <path d="M180 60 C 210 90, 210 130, 180 170 C 150 130, 150 90, 180 60 Z" transform="rotate(180 180 115)"/>
+      <path d="M180 60 C 210 90, 210 130, 180 170 C 150 130, 150 90, 180 60 Z" transform="rotate(240 180 115)"/>
+      <path d="M180 60 C 210 90, 210 130, 180 170 C 150 130, 150 90, 180 60 Z" transform="rotate(300 180 115)"/>
+      <circle cx="180" cy="115" r="7" stroke="#E8C87E"/>
+    </g>
+    <path d="M180 170 C 176 220, 184 260, 172 310" stroke="#F8C8DC" stroke-width="0.6" opacity="0.35"/>
+    <path d="M178 230 C 160 236, 145 250, 138 268" stroke="#F8C8DC" stroke-width="0.6" opacity="0.3"/>
+  </svg>
+
+  <!-- Fleur droite, hauteur milieu -->
+  <svg width="300" height="300" viewBox="0 0 300 300" style="top:22%; right:-90px;" fill="none">
+    <g stroke="#E8C87E" stroke-width="0.6" opacity="0.4">
+      <ellipse cx="150" cy="90" rx="26" ry="46" transform="rotate(0 150 130)"/>
+      <ellipse cx="150" cy="90" rx="26" ry="46" transform="rotate(72 150 130)"/>
+      <ellipse cx="150" cy="90" rx="26" ry="46" transform="rotate(144 150 130)"/>
+      <ellipse cx="150" cy="90" rx="26" ry="46" transform="rotate(216 150 130)"/>
+      <ellipse cx="150" cy="90" rx="26" ry="46" transform="rotate(288 150 130)"/>
+      <circle cx="150" cy="130" r="6" stroke="#FF7CB8"/>
+    </g>
+  </svg>
+
+  <!-- Fleur bas gauche -->
+  <svg width="340" height="340" viewBox="0 0 340 340" style="bottom:-80px; left:6%;" fill="none">
+    <g stroke="#F8C8DC" stroke-width="0.65" opacity="0.45">
+      <path d="M170 90 C 140 120, 140 160, 170 200 C 200 160, 200 120, 170 90 Z"/>
+      <path d="M170 90 C 200 120, 200 160, 170 200 C 140 160, 140 120, 170 90 Z" transform="rotate(51 170 145)"/>
+      <path d="M170 90 C 200 120, 200 160, 170 200 C 140 160, 140 120, 170 90 Z" transform="rotate(102 170 145)"/>
+      <path d="M170 90 C 200 120, 200 160, 170 200 C 140 160, 140 120, 170 90 Z" transform="rotate(153 170 145)"/>
+      <path d="M170 90 C 200 120, 200 160, 170 200 C 140 160, 140 120, 170 90 Z" transform="rotate(204 170 145)"/>
+      <path d="M170 90 C 200 120, 200 160, 170 200 C 140 160, 140 120, 170 90 Z" transform="rotate(255 170 145)"/>
+      <path d="M170 90 C 200 120, 200 160, 170 200 C 140 160, 140 120, 170 90 Z" transform="rotate(306 170 145)"/>
+      <circle cx="170" cy="145" r="8" stroke="#E8C87E"/>
+    </g>
+  </svg>
+
+  <!-- Petite fleur flottante centre -->
+  <svg width="140" height="140" viewBox="0 0 140 140" style="top:60%; left:48%;" fill="none">
+    <g stroke="#F8C8DC" stroke-width="0.6" opacity="0.3">
+      <circle cx="70" cy="50" r="16"/>
+      <circle cx="70" cy="50" r="16" transform="rotate(72 70 70)"/>
+      <circle cx="70" cy="50" r="16" transform="rotate(144 70 70)"/>
+      <circle cx="70" cy="50" r="16" transform="rotate(216 70 70)"/>
+      <circle cx="70" cy="50" r="16" transform="rotate(288 70 70)"/>
+    </g>
+  </svg>
+</div>
+
+<!-- ========================================================================
+     EN-TÊTE
+     ======================================================================== -->
+<header>
+  <a href="#accueil" class="marque">Petit Trésor</a>
+  <nav>
+    <div class="nav-liens">
+      <a href="#collections">Collections</a>
+      <a href="#savoir-faire">Savoir-faire</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="btn-panier" id="ouvrir-panier" aria-label="Ouvrir le panier">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Panier</span>
+      <span id="compteur-panier">0</span>
+    </button>
+  </nav>
+</header>
+
+<!-- ========================================================================
+     HÉRO
+     ======================================================================== -->
+<main>
+<section class="hero" id="accueil">
+  <span class="hero-eyebrow">Joaillerie fine — pièces façonnées à la main</span>
+  <h1 class="enseigne">Petit <span class="neon">Trésor</span></h1>
+  <p class="hero-sous-titre">Des bijoux pensés comme des souvenirs que l'on porte. Or recyclé, pierres choisies une à une, ateliers français.</p>
+  <div class="hero-boutons">
+    <a href="#collections" class="btn-primaire">Découvrir la collection</a>
+    <a href="#savoir-faire" class="btn-secondaire">Notre savoir-faire</a>
+  </div>
+  <div class="hero-scroll">
+    <span>Défiler</span>
+    <div class="trait"></div>
+  </div>
+</section>
+
+<!-- ========================================================================
+     BANDEAU VALEURS
+     ======================================================================== -->
+<div class="bandeau">
+  <div class="bandeau-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7Z"/><path d="M3 7l9 5 9-5"/><path d="M12 12v10"/></svg>
+    Or recyclé 18 carats
+  </div>
+  <div class="bandeau-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/><path d="M2 7l10-5 10 5-10 5-10-5Z"/><path d="M6 10v4"/><path d="M18 10v4"/></svg>
+    Écrin offert
+  </div>
+  <div class="bandeau-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Livraison sous 3 à 5 jours
+  </div>
+  <div class="bandeau-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    Fabrication française
+  </div>
+</div>
+
+<!-- ========================================================================
+     COLLECTIONS / BOUTIQUE
+     ======================================================================== -->
+<section class="boutique" id="collections">
+  <div class="entete-section">
+    <span class="entete-eyebrow">La collection</span>
+    <h2 class="entete-titre">Nos pièces du moment</h2>
+    <p class="entete-texte">Chaque bijou est numéroté et accompagné de son certificat d'origine des matières.</p>
+  </div>
+
+  <div class="grille-produits" id="grille-produits">
+    <!-- Les cartes produits sont générées par le script en bas de page,
+         à partir du tableau JS "produits". Remplacez "image: null" par
+         image: "chemin/vers/votre-photo.jpg" pour chaque article. -->
+  </div>
+</section>
+
+<!-- ========================================================================
+     SAVOIR-FAIRE
+     ======================================================================== -->
+<section class="savoir-faire" id="savoir-faire">
+  <div class="sf-visuel">
+    <div class="sf-cadre"></div>
+    <div class="rempla">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>
+      <span>Photo d'atelier à venir</span>
+    </div>
+  </div>
+  <div class="sf-texte">
+    <span class="entete-eyebrow">L'atelier</span>
+    <h2 class="entete-titre">Un geste, une pierre, une histoire</h2>
+    <p>Chaque pièce Petit Trésor naît dans notre atelier, où elle est dessinée, coulée puis sertie à la main. Nous travaillons en petites séries pour garder le contrôle de chaque détail.</p>
+    <p>Les pierres sont sélectionnées une à une auprès de fournisseurs traçables, et l'or provient exclusivement de filières recyclées.</p>
+    <div class="sf-liste">
+      <div class="sf-liste-item">
+        <strong>I.</strong>
+        <span>Dessin de la pièce et choix des matières auprès de nos partenaires de confiance.</span>
+      </div>
+      <div class="sf-liste-item">
+        <strong>II.</strong>
+        <span>Fonte et façonnage à la main dans notre atelier, pièce par pièce.</span>
+      </div>
+      <div class="sf-liste-item">
+        <strong>III.</strong>
+        <span>Sertissage, polissage puis contrôle qualité avant mise en écrin.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================================
+     NEWSLETTER
+     ======================================================================== -->
+<section class="newsletter" id="contact">
+  <h2 class="newsletter-titre">Restez proche du <span class="neon">Trésor</span></h2>
+  <p class="newsletter-texte">Recevez nos nouvelles pièces en avant-première et les invitations à nos ventes privées.</p>
+  <form class="form-newsletter" id="form-newsletter">
+    <input type="email" placeholder="Votre adresse e-mail" required aria-label="Adresse e-mail">
+    <button type="submit">S'inscrire</button>
+  </form>
+  <p class="newsletter-confirmation" id="confirmation-newsletter">Merci — vous recevrez bientôt de nos nouvelles.</p>
+</section>
+</main>
+
+<!-- ========================================================================
+     PIED DE PAGE
+     ======================================================================== -->
+<footer>
+  <div class="pied-grille">
+    <div>
+      <div class="pied-marque">Petit Trésor</div>
+      <p class="pied-baseline">Joaillerie fine façonnée à la main, entre tradition et lumière.</p>
+    </div>
+    <div class="pied-colonne">
+      <h4>Boutique</h4>
+      <ul>
+        <li><a href="#collections">Collections</a></li>
+        <li><a href="#savoir-faire">Savoir-faire</a></li>
+        <li><a href="#">Cartes cadeaux</a></li>
+      </ul>
+    </div>
+    <div class="pied-colonne">
+      <h4>Aide</h4>
+      <ul>
+        <li><a href="#">Livraison</a></li>
+        <li><a href="#">Retours</a></li>
+        <li><a href="#">Guide des tailles</a></li>
+      </ul>
+    </div>
+    <div class="pied-colonne">
+      <h4>Suivez-nous</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Pinterest</a></li>
+        <li><a href="#">TikTok</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pied-bas">
+    <span>© 2026 Petit Trésor. Tous droits réservés.</span>
+    <div class="pied-licence">
+      <a href="https://github.com" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.1c-3.2.7-3.87-1.36-3.87-1.36-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.29 1.19-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.05.78 2.12v3.14c0 .3.21.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+        Code source (GitHub)
+      </a>
+      <a href="#" id="lien-licence">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        Licence MIT — open source
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- ========================================================================
+     TIROIR PANIER
+     ======================================================================== -->
+<div class="voile" id="voile"></div>
+<aside class="tiroir-panier" id="tiroir-panier" aria-label="Panier">
+  <div class="tiroir-entete">
+    <h3>Votre panier</h3>
+    <button class="tiroir-fermer" id="fermer-panier" aria-label="Fermer le panier">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="tiroir-corps" id="tiroir-corps">
+    <!-- rempli par JS -->
+  </div>
+  <div class="tiroir-pied" id="tiroir-pied">
+    <!-- rempli par JS -->
+  </div>
+</aside>
+
+<script>
+/* ==========================================================================
+   PETIT TRÉSOR — logique boutique + panier
+   Licence MIT — voir bas de fichier.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CATALOGUE
+   Remplacez "image: null" par le chemin de votre photo, ex :
+   image: "photos/bague-aurore.jpg"
+   Tant que "image" vaut null, une vitrine avec un cadre discret s'affiche
+   à la place — jamais d'image cassée.
+   -------------------------------------------------------------------------- */
+const produits = [
+  { id: "pt-01", nom: "Bague Aurore",     matiere: "Or 18k · Diamant",      prix: 890,  etiquette: "Nouveauté", image: null },
+  { id: "pt-02", nom: "Collier Lumen",    matiere: "Or 18k · Perle",        prix: 640,  etiquette: null,        image: null },
+  { id: "pt-03", nom: "Boucles Velours",  matiere: "Or rose · Grenat",      prix: 410,  etiquette: null,        image: null },
+  { id: "pt-04", nom: "Bracelet Rosée",   matiere: "Or 18k",                prix: 520,  etiquette: null,        image: null },
+  { id: "pt-05", nom: "Bague Camélia",    matiere: "Or blanc · Saphir",     prix: 970,  etiquette: "Pièce rare",image: null },
+  { id: "pt-06", nom: "Pendentif Écrin",  matiere: "Or 18k · Diamant",      prix: 730,  etiquette: null,        image: null },
+  { id: "pt-07", nom: "Chevalière Iris",  matiere: "Or rose",               prix: 480,  etiquette: null,        image: null },
+  { id: "pt-08", nom: "Créoles Nova",     matiere: "Or 18k",                prix: 350,  etiquette: null,        image: null },
+];
+
+/* --------------------------------------------------------------------------
+   2. ÉTAT DU PANIER
+   -------------------------------------------------------------------------- */
+let panier = {}; // { id_produit: quantite }
+
+const formateurPrix = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+/* --------------------------------------------------------------------------
+   3. RENDU DE LA GRILLE PRODUITS
+   -------------------------------------------------------------------------- */
+function svgVitrinePlaceholder(){
+  return `
+    <div class="rempla">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2 3 7v10l9 5 9-5V7Z"/><path d="M3 7l9 5 9-5"/><path d="M12 12v10"/>
+      </svg>
+      <span>Photo à venir</span>
+    </div>`;
+}
+
+function rendreGrille(){
+  const grille = document.getElementById('grille-produits');
+  grille.innerHTML = produits.map(p => `
+    <article class="carte-produit" data-id="${p.id}">
+      <div class="produit-vitrine">
+        ${p.image ? `<img src="${p.image}" alt="${p.nom}">` : svgVitrinePlaceholder()}
+        <div class="produit-halo"></div>
+        ${p.etiquette ? `<span class="produit-etiquette">${p.etiquette}</span>` : ''}
+        <div class="produit-ajout-rapide">
+          <button type="button" class="ajouter-rapide" data-id="${p.id}">Ajouter au panier</button>
+        </div>
+      </div>
+      <div class="produit-infos">
+        <span class="produit-matiere">${p.matiere}</span>
+        <h3 class="produit-nom">${p.nom}</h3>
+        <div class="produit-bas">
+          <span class="produit-prix">${formateurPrix.format(p.prix)}</span>
+          <button type="button" class="produit-plus" data-id="${p.id}" aria-label="Ajouter ${p.nom} au panier">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+
+  grille.querySelectorAll('.produit-plus, .ajouter-rapide').forEach(btn=>{
+    btn.addEventListener('click', ()=> ajouterAuPanier(btn.dataset.id));
+  });
+}
+
+/* --------------------------------------------------------------------------
+   4. LOGIQUE PANIER
+   -------------------------------------------------------------------------- */
+function ajouterAuPanier(id){
+  panier[id] = (panier[id] || 0) + 1;
+  rendrePanier();
+  ouvrirPanier();
+}
+
+function changerQuantite(id, delta){
+  if(!panier[id]) return;
+  panier[id] += delta;
+  if(panier[id] <= 0) delete panier[id];
+  rendrePanier();
+}
+
+function retirerDuPanier(id){
+  delete panier[id];
+  rendrePanier();
+}
+
+function totalArticles(){
+  return Object.values(panier).reduce((s,q)=> s+q, 0);
+}
+
+function totalPrix(){
+  return Object.entries(panier).reduce((s,[id,q])=>{
+    const p = produits.find(pr=>pr.id===id);
+    return s + (p ? p.prix*q : 0);
+  }, 0);
+}
+
+function svgLigneVide(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7Z"/><path d="M3 7l9 5 9-5"/><path d="M12 12v10"/></svg>`;
+}
+
+function rendrePanier(){
+  const corps = document.getElementById('tiroir-corps');
+  const pied  = document.getElementById('tiroir-pied');
+  const compteur = document.getElementById('compteur-panier');
+
+  compteur.textContent = totalArticles();
+
+  const ids = Object.keys(panier);
+
+  if(ids.length === 0){
+    corps.innerHTML = `
+      <div class="panier-vide">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Votre panier est vide</span>
+        <small>Ajoutez une pièce de la collection pour commencer.</small>
+      </div>`;
+    pied.innerHTML = '';
+    return;
+  }
+
+  corps.innerHTML = ids.map(id=>{
+    const p = produits.find(pr=>pr.id===id);
+    if(!p) return '';
+    return `
+      <div class="ligne-article" data-id="${id}">
+        <div class="ligne-vignette">
+          ${p.image ? `<img src="${p.image}" alt="${p.nom}">` : svgLigneVide()}
+        </div>
+        <div class="ligne-infos">
+          <span class="ligne-nom">${p.nom}</span>
+          <span class="ligne-matiere">${p.matiere}</span>
+          <div class="ligne-bas">
+            <div class="quantite">
+              <button type="button" class="moins" data-id="${id}" aria-label="Diminuer la quantité">−</button>
+              <span>${panier[id]}</span>
+              <button type="button" class="plus" data-id="${id}" aria-label="Augmenter la quantité">+</button>
+            </div>
+            <div>
+              <span class="ligne-prix">${formateurPrix.format(p.prix*panier[id])}</span>
+              <button type="button" class="ligne-suppr" data-id="${id}">Retirer</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  pied.innerHTML = `
+    <div class="recap-ligne"><span>Sous-total</span><span>${formateurPrix.format(totalPrix())}</span></div>
+    <div class="recap-ligne"><span>Livraison</span><span>Offerte</span></div>
+    <div class="recap-total"><span>Total</span><span class="neon">${formateurPrix.format(totalPrix())}</span></div>
+    <button type="button" class="btn-commander">Passer la commande</button>
+    <p class="tiroir-livraison">Paiement sécurisé · Retours sous 30 jours</p>
+  `;
+
+  corps.querySelectorAll('.moins').forEach(b=> b.addEventListener('click', ()=>changerQuantite(b.dataset.id,-1)));
+  corps.querySelectorAll('.plus').forEach(b=> b.addEventListener('click', ()=>changerQuantite(b.dataset.id,1)));
+  corps.querySelectorAll('.ligne-suppr').forEach(b=> b.addEventListener('click', ()=>retirerDuPanier(b.dataset.id)));
+}
+
+/* --------------------------------------------------------------------------
+   5. OUVERTURE / FERMETURE DU TIROIR
+   -------------------------------------------------------------------------- */
+const voile = document.getElementById('voile');
+const tiroir = document.getElementById('tiroir-panier');
+
+function ouvrirPanier(){
+  voile.classList.add('ouvert');
+  tiroir.classList.add('ouvert');
+  document.body.style.overflow = 'hidden';
+}
+function fermerPanier(){
+  voile.classList.remove('ouvert');
+  tiroir.classList.remove('ouvert');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('ouvrir-panier').addEventListener('click', ouvrirPanier);
+document.getElementById('fermer-panier').addEventListener('click', fermerPanier);
+voile.addEventListener('click', fermerPanier);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') fermerPanier(); });
+
+/* --------------------------------------------------------------------------
+   6. NEWSLETTER (démonstration front uniquement)
+   -------------------------------------------------------------------------- */
+document.getElementById('form-newsletter').addEventListener('submit', function(e){
+  e.preventDefault();
+  const confirmation = document.getElementById('confirmation-newsletter');
+  confirmation.classList.add('visible');
+  this.reset();
+});
+
+/* --------------------------------------------------------------------------
+   7. INITIALISATION
+   -------------------------------------------------------------------------- */
+rendreGrille();
+rendrePanier();
+</script>
+
+<!-- ============================================================================
+LICENSE — MIT License
+
+Copyright (c) 2026 Petit Trésor
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+Polices utilisées : Cormorant Garamond & Jost, distribuées via Google Fonts
+sous licence SIL Open Font License (OFL) — libres d'usage commercial.
+============================================================================ -->
+
+</body>
+</html>
